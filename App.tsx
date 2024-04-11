@@ -22,14 +22,14 @@ const App = () => {
         rotateEnabled={true}>
         <Camera
           zoomLevel={5}
-          // centerCoordinate={[18.5204, 73.8567]}
+          centerCoordinate={[73.856255, 18.516726]}
           pitch={0}
           animationMode="flyTo"
           animationDuration={3000}
         />
         <Mapbox.PointAnnotation
           id='marker'
-          coordinate={[18.5204, 73.8567]}
+          coordinate={[73.856255, 18.516726]}
         >
           <View/>
         </Mapbox.PointAnnotation>
