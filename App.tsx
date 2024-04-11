@@ -1,8 +1,29 @@
 import React from 'react';
-import {StyleSheet, View} from 'react-native';
+import {
+  StyleSheet,
+  View,
+  Dimensions,
+  TouchableOpacity,
+  Modal,
+  Text,
+  ScrollView,
+} from 'react-native';
 import {Camera} from '@rnmapbox/maps';
-import { PointAnnotation } from '@rnmapbox/maps';
+import {PointAnnotation} from '@rnmapbox/maps';
+import Logger from '@rnmapbox/maps';
 import Mapbox from '@rnmapbox/maps';
+import Fontisto from 'react-native-vector-icons/Fontisto';
+
+// Logger.setLogCallback(log => {
+//   const {message} = log;
+//   if(
+//     message.match('Request failed due to a permanent error: Cancelled') ||
+//     message.match('Request failed due to a permanent error: Socket Closed')
+//   ){
+//     return true;
+//   }
+//   return false;
+// })
 
 Mapbox.setAccessToken(
   'pk.eyJ1IjoidG9tcGF3YXIiLCJhIjoiY2x1dXV1cW1yMGNydTJqcGowMHh3eGplZCJ9.mbpWLDDHex0ERfZ8e8ff4g',
@@ -27,11 +48,10 @@ const App = () => {
           animationMode="flyTo"
           animationDuration={3000}
         />
-        <Mapbox.PointAnnotation
-          id='marker'
-          coordinate={[73.856255, 18.516726]}
-        >
-          <View/>
+        <Mapbox.PointAnnotation id="marker" coordinate={[73.856255, 18.516726]}>
+          <View style = {styles.markerContainer}>
+            <Fontisto name='ambulance' size={20} color={'#ff0000'}/>
+          </View>
         </Mapbox.PointAnnotation>
       </Mapbox.MapView>
     </View>
@@ -47,4 +67,12 @@ const styles = StyleSheet.create({
   map: {
     flex: 1,
   },
+  markerContainer: {
+    width: 40, 
+    height: 40,
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "white",
+    borderRadius: 20,
+  }
 });
