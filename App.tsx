@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState} from 'react';
 import {
   StyleSheet,
   View,
@@ -34,6 +34,15 @@ Mapbox.setTelemetryEnabled(false);
 // Mapbox.setWellKnownTileServer('Mapbox'); //deprecated
 
 const App = () => {
+  const [modalVisible, setModalVisible] = useState<boolean>(false);
+
+  const onMarkerPress = () => {
+    setModalVisible(true);
+  };
+
+  const closeModal = () => {
+    setModalVisible(false);
+  };
   return (
     <View style={styles.container}>
       <Mapbox.MapView
@@ -48,12 +57,26 @@ const App = () => {
           animationMode="flyTo"
           animationDuration={3000}
         />
-        <Mapbox.PointAnnotation id="marker" coordinate={[73.856255, 18.516726]}>
-          <View style = {styles.markerContainer}>
-            <Fontisto name='ambulance' size={20} color={'#ff0000'}/>
+        <Mapbox.PointAnnotation
+          id="marker"
+          coordinate={[73.856255, 18.516726]}
+          onSelected={onMarkerPress}>
+          <View style={styles.markerContainer}>
+            <Fontisto name="ambulance" size={20} color={'#ff0000'} />
           </View>
         </Mapbox.PointAnnotation>
       </Mapbox.MapView>
+      <Modal visible={modalVisible} animationType="none" transparent>
+        <View style={styles.modalContainer}>
+          <View style={styles.modalContent}>
+              <TouchableOpacity onPress={closeModal} style={styles.closeButton}>
+                <Text style={styles.closeButtonText}>Close</Text>
+              </TouchableOpacity>
+              <Text>City: Pune</Text>
+              <Text>Country: India</Text>
+          </View>
+        </View>
+      </Modal>
     </View>
   );
 };
@@ -68,11 +91,35 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   markerContainer: {
-    width: 40, 
+    width: 40,
     height: 40,
-    justifyContent: "center",
-    alignItems: "center",
-    backgroundColor: "white",
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'white',
     borderRadius: 20,
-  }
+  },
+  modalContainer: {
+    flex: 1,
+    backgroundColor: 'rgba(0,0,0,0.5)',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  modalContent: {
+    backgroundColor: 'white',
+    borderRadius: 16,
+    marginHorizontal: 20,
+    padding: 20,
+    elevation: 5,
+    width: Dimensions.get('window').width - 40,
+  },
+  closeButton: {
+    position: 'absolute',
+    top: 40,
+    right: 20,
+  },
+  closeButtonText: {
+    color: 'black',
+    fontSize: 16,
+    padding: 10,
+  },
 });
