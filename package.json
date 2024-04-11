@@ -13,7 +13,8 @@
     "@rnmapbox/maps": "^10.1.19",
     "react": "18.2.0",
     "react-native": "0.73.6",
-    "react-native-vector-icons": "^10.0.3"
+    "react-native-vector-icons": "^10.0.3",
+    "xml-js": "^1.6.11"
   },
   "devDependencies": {
     "@babel/core": "^7.20.0",
