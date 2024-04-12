@@ -13,7 +13,6 @@ import {PointAnnotation} from '@rnmapbox/maps';
 import Logger from '@rnmapbox/maps';
 import Mapbox from '@rnmapbox/maps';
 import Fontisto from 'react-native-vector-icons/Fontisto';
-// import { parse } from 'xml-js';
 
 
 // Logger.setLogCallback(log => {
