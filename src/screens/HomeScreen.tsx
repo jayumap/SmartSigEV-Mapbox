@@ -72,7 +72,7 @@ const HomeScreen = () => {
         <View style={styles.topBar}>
         <Text style={styles.logo}>SMART SIG-EV</Text>
         {/* Notification Icon */}
-        <Fontisto name="bell" size={5} color={'#ff0000'} />
+        <Fontisto name="bell" size={20} color={'#000000'} />
       </View>
 
         {/*Map  */}
@@ -127,8 +127,8 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     alignItems: 'center',
     padding: 16,
-    backgroundColor: '#fff', // Adjust as needed
-    elevation: 3,
+    backgroundColor: '#fff', 
+    elevation: 4,
   },
   logo: {
     fontSize: 20,
