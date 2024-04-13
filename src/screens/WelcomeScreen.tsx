@@ -51,7 +51,7 @@ const styles = StyleSheet.create({
     left: 0,
     width: '100%',
     height: '75%',
-    resizeMode: 'contain',
+    resizeMode: 'cover',
     aspectRatio: 2,
   },
   logo: {

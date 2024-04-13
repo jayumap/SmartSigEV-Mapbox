@@ -7,75 +7,54 @@ import {
   Modal,
   Text,
   ScrollView,
+  TextInput,
 } from 'react-native';
 import {Camera} from '@rnmapbox/maps';
 import {PointAnnotation} from '@rnmapbox/maps';
-import Logger from '@rnmapbox/maps';
 import Mapbox from '@rnmapbox/maps';
 import Fontisto from 'react-native-vector-icons/Fontisto';
 import Geolocation from '@react-native-community/geolocation';
+import BottomBar from './BottomBar';
 
-// Logger.setLogCallback(log => {
-//   const {message} = log;
-//   if(
-//     message.match('Request failed due to a permanent error: Cancelled') ||
-//     message.match('Request failed due to a permanent error: Socket Closed')
-//   ){
-//     return true;
-//   }
-//   return false;
-// })
-
-// mapbox public token
 Mapbox.setAccessToken(
   'pk.eyJ1IjoidG9tcGF3YXIiLCJhIjoiY2x1dXV1cW1yMGNydTJqcGowMHh3eGplZCJ9.mbpWLDDHex0ERfZ8e8ff4g',
 );
 
-// Mapbox.setConnected(true); //not a function
 Mapbox.setTelemetryEnabled(false);
-// Mapbox.setWellKnownTileServer('Mapbox'); //deprecated
 
 const HomeScreen = () => {
   const [modalVisible, setModalVisible] = useState<boolean>(false);
   const [LocationData, setLocationData] = useState<any>(null);
   const [userLocation, setUserLocation] = useState<any>(null);
-
-  // reverse geocode api
-  const url = `https://nominatim.openstreetmap.org/reverse?format=json&lat=${userLocation.latitude}&lon=${userLocation.longitude}`;
-
-  const onMarkerPress = () => {
-    setModalVisible(true);
-  };
-
-  const closeModal = () => {
-    setModalVisible(false);
-  };
+  const [searchText, setSearchText] = useState<string>('');
 
   //   reverse geocode endpoint
   useEffect(() => {
-    fetch(url)
-      .then(response => {
-        if (!response.ok) {
-          throw new Error('Network response was not ok');
-        }
-        return response.json();
-      })
-      .then(jsonData => {
-        console.log(
-          'User Location Coordinates:',
-          userLocation.latitude,
-          userLocation.longitude,
-        );
-        console.log('Reverse Geocoding Response:', jsonData);
-        setLocationData(jsonData);
-      })
-      .catch(error =>
-        console.error('Error while fetching the reverse data', error),
-      );
-  }, []);
+    if (userLocation) {
+      const url = `https://nominatim.openstreetmap.org/reverse?format=json&lat=${userLocation?.latitude}&lon=${userLocation?.longitude}`;
 
-  
-  //user's current location
+      fetch(url)
+        .then(response => {
+          if (!response.ok) {
+            throw new Error('Network response was not ok');
+          }
+          return response.json();
+        })
+        .then(jsonData => {
+          console.log(
+            'User Location Coordinates:',
+            userLocation?.latitude,
+            userLocation?.longitude,
+          );
+          console.log('Reverse Geocoding Response:', jsonData);
+          setLocationData(jsonData);
+        })
+        .catch(error =>
+          console.error('Error while fetching the reverse data', error),
+        );
+    }
+  }, [userLocation]);
+
   useEffect(() => {
     // Fetch user's location
     Geolocation.getCurrentPosition(
@@ -90,29 +69,43 @@ const HomeScreen = () => {
     );
   }, []);
 
+  const onMarkerPress = () => {
+    setModalVisible(true);
+  };
+
+  const closeModal = () => {
+    setModalVisible(false);
+  };
+
+  //   search destination
+  const handleSearch = () => {
+    // Handle search logic here
+    console.log('Searching for:', searchText);
+  };
+
+  const handleEmergency = () => {
+    // Handle emergency button press
+    console.log('Emergency button pressed');
+  };
+
   return (
     <View style={styles.container}>
       <View style={styles.topBarWrapper}>
         <View style={styles.topBar}>
-          {/* Left menu icon */}
           <TouchableOpacity onPress={() => {}}>
             <Fontisto name="more-v-a" size={15} color={'#000000'} />
           </TouchableOpacity>
-          {/* Modal data */}
           <Text style={styles.topBarText}>
-            {/* Display the modal data here */}
             {LocationData
               ? `${LocationData?.display_name}`
               : 'Loading location...'}
           </Text>
-          {/* Notification Icon */}
           <TouchableOpacity onPress={() => {}}>
             <Fontisto name="bell" size={15} color={'#000000'} />
           </TouchableOpacity>
         </View>
       </View>
 
-      {/* Map  */}
       <Mapbox.MapView
         style={styles.map}
         zoomEnabled={true}
@@ -120,14 +113,20 @@ const HomeScreen = () => {
         rotateEnabled={true}>
         <Camera
           zoomLevel={15}
-          centerCoordinate={[userLocation.longitude, userLocation.latitude]}
+          centerCoordinate={[
+            userLocation?.longitude ?? 0,
+            userLocation?.latitude ?? 0,
+          ]}
           pitch={0}
           animationMode="flyTo"
           animationDuration={3000}
         />
         <Mapbox.PointAnnotation
           id="marker"
-          coordinate={[userLocation.longitude, userLocation.latitude]}
+          coordinate={[
+            userLocation?.longitude ?? 0,
+            userLocation?.latitude ?? 0,
+          ]}
           onSelected={onMarkerPress}>
           <View style={styles.markerContainer}>
             <Fontisto name="ambulance" size={20} color={'black'} />
@@ -161,6 +160,9 @@ const HomeScreen = () => {
           </View>
         </View>
       </Modal>
+
+      {/* Bottom bar */}
+      <BottomBar onSearch={handleSearch} onEmergency={handleEmergency} />
     </View>
   );
 };
@@ -190,17 +192,12 @@ const styles = StyleSheet.create({
   topBarText: {
     color: 'black',
     maxWidth: '92%',
-    paddingLeft: 0,
+    paddingLeft: 5,
     paddingRight: 10,
     fontSize: 14,
     textAlign: 'left',
     left: 0,
     fontFamily: 'Poppins-Regular',
-  },
-  logo: {
-    fontSize: 20,
-    fontWeight: 'bold',
-    fontFamily: 'Poppins-BoldItalic',
   },
   map: {
     flex: 1,
@@ -247,6 +244,36 @@ const styles = StyleSheet.create({
     color: 'white',
     fontSize: 16,
     padding: 10,
+    fontFamily: 'Poppins-Regular',
+  },
+  bottomBar: {
+    position: 'absolute',
+    bottom: 20,
+    left: 10,
+    right: 10,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+  },
+  searchInput: {
+    flex: 1,
+    backgroundColor: 'grey',
+    color: 'black',
+    borderRadius: 8,
+    paddingVertical: 10,
+    paddingHorizontal: 15,
+    marginRight: 10,
+    fontFamily: 'Poppins-Regular',
+  },
+  emergencyButton: {
+    backgroundColor: 'red',
+    borderRadius: 8,
+    paddingVertical: 10,
+    paddingHorizontal: 20,
+  },
+  emergencyButtonText: {
+    color: 'white',
+    fontSize: 16,
     fontFamily: 'Poppins-Regular',
   },
 });
