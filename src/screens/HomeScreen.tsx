@@ -14,7 +14,6 @@ import Logger from '@rnmapbox/maps';
 import Mapbox from '@rnmapbox/maps';
 import Fontisto from 'react-native-vector-icons/Fontisto';
 
-
 // Logger.setLogCallback(log => {
 //   const {message} = log;
 //   if(
@@ -64,18 +63,30 @@ const HomeScreen = () => {
         console.error('Error while fetching the reverse data', error),
       );
   }, []);
-  
-  
 
   return (
     <View style={styles.container}>
+      <View style={styles.topBarWrapper}>
         <View style={styles.topBar}>
-        <Text style={styles.logo}>SMART SIG-EV</Text>
-        {/* Notification Icon */}
-        <Fontisto name="bell" size={20} color={'#000000'} />
+          {/* Left menu icon */}
+          <TouchableOpacity onPress={() => {}}>
+            <Fontisto name="more-v-a" size={15} color={'#000000'} />
+          </TouchableOpacity>
+          {/* Modal data */}
+          <Text style={styles.topBarText}>
+            {/* Display the modal data here */}
+            {LocationData
+              ? `${LocationData?.address?.road}, ${LocationData?.address?.suburb}, ${LocationData?.address?.city}, ${LocationData?.address?.country}`
+              : 'Loading location...'}
+          </Text>
+          {/* Notification Icon */}
+          <TouchableOpacity onPress={() => {}}>
+            <Fontisto name="bell" size={15} color={'#000000'} />
+          </TouchableOpacity>
+        </View>
       </View>
 
-        {/*Map  */}
+      {/*Map  */}
       <Mapbox.MapView
         style={styles.map}
         zoomEnabled={true}
@@ -93,7 +104,7 @@ const HomeScreen = () => {
           coordinate={[73.856255, 18.516726]}
           onSelected={onMarkerPress}>
           <View style={styles.markerContainer}>
-            <Fontisto name="ambulance" size={20} color={'#ff0000'} />
+            <Fontisto name="ambulance" size={20} color={'black'} />
           </View>
         </Mapbox.PointAnnotation>
       </Mapbox.MapView>
@@ -103,12 +114,24 @@ const HomeScreen = () => {
             <TouchableOpacity onPress={closeModal} style={styles.closeButton}>
               <Text style={styles.closeButtonText}>Close</Text>
             </TouchableOpacity>
-            <Text style={styles.modalText}>Road: {LocationData?.address?.road}</Text>
-            <Text style={styles.modalText}>Suburb: {LocationData?.address?.suburb}</Text>
-            <Text style={styles.modalText}>City: {LocationData?.address?.city}</Text>
-            <Text style={styles.modalText}>State District: {LocationData?.address?.state_district}</Text>
-            <Text style={styles.modalText}>State: {LocationData?.address?.state}</Text>
-            <Text style={styles.modalText}>Country: {LocationData?.address?.country}</Text>
+            <Text style={styles.modalText}>
+              Road: {LocationData?.address?.road}
+            </Text>
+            <Text style={styles.modalText}>
+              Suburb: {LocationData?.address?.suburb}
+            </Text>
+            <Text style={styles.modalText}>
+              City: {LocationData?.address?.city}
+            </Text>
+            <Text style={styles.modalText}>
+              State District: {LocationData?.address?.state_district}
+            </Text>
+            <Text style={styles.modalText}>
+              State: {LocationData?.address?.state}
+            </Text>
+            <Text style={styles.modalText}>
+              Country: {LocationData?.address?.country}
+            </Text>
           </View>
         </View>
       </Modal>
@@ -120,19 +143,35 @@ export default HomeScreen;
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
+    flex: 1
+  },
+  topBarWrapper: {
+    position: 'absolute',
+    top: 20,
+    left: 10,
+    right: 10,
+    zIndex: 1,
   },
   topBar: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    padding: 16,
-    backgroundColor: '#fff', 
+    padding: 10,
+    backgroundColor: 'white',
     elevation: 4,
+    borderRadius: 8,
+  },
+  topBarText: {
+    color: 'black',
+    fontSize: 15,
+    textAlign: 'left',
+    left: -12,
+    fontFamily: 'Poppins-Regular',
   },
   logo: {
     fontSize: 20,
     fontWeight: 'bold',
+    fontFamily: 'Poppins-BoldItalic',
   },
   map: {
     flex: 1,
@@ -161,21 +200,24 @@ const styles = StyleSheet.create({
     width: Dimensions.get('window').width - 40,
   },
   modalText: {
-    color: 'black', 
+    color: 'black',
     fontSize: 16,
     marginBottom: 10,
+    alignItems: 'center',
+    fontFamily: 'Poppins-Regular',
   },
   closeButton: {
     position: 'absolute',
-    backgroundColor: 'red',
+    backgroundColor: 'black',
     borderRadius: 5,
-    top: 160,
-    bottom: 14,
+    top: 185,
+    bottom: 15,
     right: 20,
   },
   closeButtonText: {
     color: 'white',
     fontSize: 16,
     padding: 10,
+    fontFamily: 'Poppins-Regular',
   },
 });
