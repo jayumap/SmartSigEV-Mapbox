@@ -69,6 +69,13 @@ const HomeScreen = () => {
 
   return (
     <View style={styles.container}>
+        <View style={styles.topBar}>
+        <Text style={styles.logo}>SMART SIG-EV</Text>
+        {/* Notification Icon */}
+        <Fontisto name="bell" size={5} color={'#ff0000'} />
+      </View>
+
+        {/*Map  */}
       <Mapbox.MapView
         style={styles.map}
         zoomEnabled={true}
@@ -114,6 +121,18 @@ export default HomeScreen;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+  },
+  topBar: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    padding: 16,
+    backgroundColor: '#fff', // Adjust as needed
+    elevation: 3,
+  },
+  logo: {
+    fontSize: 20,
+    fontWeight: 'bold',
   },
   map: {
     flex: 1,
