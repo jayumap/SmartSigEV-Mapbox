@@ -26,6 +26,7 @@ import Geolocation from '@react-native-community/geolocation';
 //   return false;
 // })
 
+// mapbox public token
 Mapbox.setAccessToken(
   'pk.eyJ1IjoidG9tcGF3YXIiLCJhIjoiY2x1dXV1cW1yMGNydTJqcGowMHh3eGplZCJ9.mbpWLDDHex0ERfZ8e8ff4g',
 );
@@ -50,6 +51,7 @@ const HomeScreen = () => {
     setModalVisible(false);
   };
 
+  //   reverse geocode endpoint
   useEffect(() => {
     fetch(url)
       .then(response => {
@@ -72,6 +74,7 @@ const HomeScreen = () => {
       );
   }, []);
 
+  
   //user's current location
   useEffect(() => {
     // Fetch user's location
