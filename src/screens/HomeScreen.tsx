@@ -13,6 +13,7 @@ import {PointAnnotation} from '@rnmapbox/maps';
 import Logger from '@rnmapbox/maps';
 import Mapbox from '@rnmapbox/maps';
 import Fontisto from 'react-native-vector-icons/Fontisto';
+import Geolocation from '@react-native-community/geolocation';
 
 // Logger.setLogCallback(log => {
 //   const {message} = log;
@@ -36,9 +37,10 @@ Mapbox.setTelemetryEnabled(false);
 const HomeScreen = () => {
   const [modalVisible, setModalVisible] = useState<boolean>(false);
   const [LocationData, setLocationData] = useState<any>(null);
+  const [userLocation, setUserLocation] = useState<any>(null);
 
   // reverse geocode api
-  const url = `https://nominatim.openstreetmap.org/reverse?format=json&lat=${18.516726}&lon=${73.856255}`;
+  const url = `https://nominatim.openstreetmap.org/reverse?format=json&lat=${userLocation.latitude}&lon=${userLocation.longitude}`;
 
   const onMarkerPress = () => {
     setModalVisible(true);
@@ -57,11 +59,32 @@ const HomeScreen = () => {
         return response.json();
       })
       .then(jsonData => {
+        console.log(
+          'User Location Coordinates:',
+          userLocation.latitude,
+          userLocation.longitude,
+        );
+        console.log('Reverse Geocoding Response:', jsonData);
         setLocationData(jsonData);
       })
       .catch(error =>
         console.error('Error while fetching the reverse data', error),
       );
+  }, []);
+
+  //user's current location
+  useEffect(() => {
+    // Fetch user's location
+    Geolocation.getCurrentPosition(
+      position => {
+        const {latitude, longitude} = position.coords;
+        setUserLocation({latitude, longitude});
+      },
+      error => {
+        console.error('Error fetching location: ', error);
+      },
+      {enableHighAccuracy: true, timeout: 15000, maximumAge: 10000},
+    );
   }, []);
 
   return (
@@ -76,7 +99,7 @@ const HomeScreen = () => {
           <Text style={styles.topBarText}>
             {/* Display the modal data here */}
             {LocationData
-              ? `${LocationData?.address?.road}, ${LocationData?.address?.suburb}, ${LocationData?.address?.city}, ${LocationData?.address?.country}`
+              ? `${LocationData?.display_name}`
               : 'Loading location...'}
           </Text>
           {/* Notification Icon */}
@@ -86,7 +109,7 @@ const HomeScreen = () => {
         </View>
       </View>
 
-      {/*Map  */}
+      {/* Map  */}
       <Mapbox.MapView
         style={styles.map}
         zoomEnabled={true}
@@ -94,14 +117,14 @@ const HomeScreen = () => {
         rotateEnabled={true}>
         <Camera
           zoomLevel={15}
-          centerCoordinate={[73.856255, 18.516726]}
+          centerCoordinate={[userLocation.longitude, userLocation.latitude]}
           pitch={0}
           animationMode="flyTo"
           animationDuration={3000}
         />
         <Mapbox.PointAnnotation
           id="marker"
-          coordinate={[73.856255, 18.516726]}
+          coordinate={[userLocation.longitude, userLocation.latitude]}
           onSelected={onMarkerPress}>
           <View style={styles.markerContainer}>
             <Fontisto name="ambulance" size={20} color={'black'} />
@@ -143,7 +166,7 @@ export default HomeScreen;
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1
+    flex: 1,
   },
   topBarWrapper: {
     position: 'absolute',
@@ -163,9 +186,12 @@ const styles = StyleSheet.create({
   },
   topBarText: {
     color: 'black',
-    fontSize: 15,
+    maxWidth: '92%',
+    paddingLeft: 0,
+    paddingRight: 10,
+    fontSize: 14,
     textAlign: 'left',
-    left: -12,
+    left: 0,
     fontFamily: 'Poppins-Regular',
   },
   logo: {
