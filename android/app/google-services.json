@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "538775302708",
+    "project_id": "smart-sig-ev-1b6ae",
+    "storage_bucket": "smart-sig-ev-1b6ae.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:538775302708:android:fcd26a8f50e2b254dc1061",
+        "android_client_info": {
+          "package_name": "com.smartsigev"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDCb6u5GT1ypdyYY2xlenq55zDd7GFHqiI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

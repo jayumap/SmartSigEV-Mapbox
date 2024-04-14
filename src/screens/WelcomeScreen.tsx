@@ -26,7 +26,7 @@ const WelcomeScreen = () => {
       />
 
       {/* Tagline */}
-      <Text style={styles.tagline}>Feel Safe {'\n'}with Smart Sig-EV</Text>
+      <Text style={styles.tagline}>Feel Safe {'\n'}with Res-Q-Signal !</Text>
 
       {/* Continue with phone number button */}
       <TouchableOpacity style={styles.continueButton} onPress={handleContinue}>
@@ -47,23 +47,21 @@ const styles = StyleSheet.create({
   },
   banner: {
     position: 'absolute',
-    top: 0,
-    left: 0,
+    top: '20%',
     width: '100%',
-    height: '75%',
-    resizeMode: 'cover',
+    height: '56%',
     aspectRatio: 2,
   },
   logo: {
     position: 'absolute',
     top: 20,
-    left: 20,
-    width: 50,
-    height: 50,
+    left: 10,
+    width: '50%',
+    height: '14%',
   },
   tagline: {
     position: 'absolute',
-    top: '78%',
+    top: '75%',
     textAlign: 'left',
     left: 10,
     fontSize: 25,
@@ -73,7 +71,7 @@ const styles = StyleSheet.create({
   },
   continueButton: {
     position: 'absolute',
-    bottom: 50,
+    bottom: 65,
     width: '92%',
     backgroundColor: 'black',
     padding: 15,
@@ -88,7 +86,7 @@ const styles = StyleSheet.create({
   },
   termsText: {
     position: 'absolute',
-    bottom: 20,
+    bottom: 30,
     fontSize: 12,
     color: 'gray',
     fontFamily: 'Poppins-Light'
