@@ -248,7 +248,7 @@ const styles = StyleSheet.create({
   },
   bottomBar: {
     position: 'absolute',
-    bottom: 20,
+    bottom: 50,
     left: 10,
     right: 10,
     flexDirection: 'row',
