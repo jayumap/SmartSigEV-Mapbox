@@ -8,18 +8,24 @@ import {
 } from 'react-native';
 import HomeScreen from './HomeScreen';
 import Fontisto from 'react-native-vector-icons/Fontisto';
+import { useNavigation } from '@react-navigation/native';
 
 interface BottomBarProps {
     onSearch: (text: string) => void;
     onEmergency: () => void;
   }
 
-  const BottomBar: React.FC<BottomBarProps> = ({ onSearch, onEmergency }) => {
+  const BottomBar: React.FC<BottomBarProps> = ({ onSearch }) => {
     const [searchText, setSearchText] = useState<string>('');
+    const navigation = useNavigation();
   
     const handleSearch = () => {
       onSearch(searchText);
     };
+
+    const handleEmergency = () => {
+      navigation.navigate('Emergency'); // Navigate to the EmergencyScreen
+  };
 
   return (
     <View style={styles.bottomBar}>
@@ -33,7 +39,7 @@ interface BottomBarProps {
         onSubmitEditing={handleSearch}
       />
     </View>
-    <TouchableOpacity style={styles.emergencyButton} onPress={onEmergency}>
+    <TouchableOpacity style={styles.emergencyButton} onPress={handleEmergency}>
       <Text style={styles.emergencyButtonText}>Emergency</Text>
     </TouchableOpacity>
   </View>
