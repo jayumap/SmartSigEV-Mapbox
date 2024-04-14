@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { View, TextInput, StyleSheet, Button, Text, Dimensions } from 'react-native';
 import Mapbox from '@rnmapbox/maps';
-import { Camera, UserLocation, PointAnnotation } from '@rnmapbox/maps';
+import { Camera, UserLocation, PointAnnotation, LineLayer } from '@rnmapbox/maps';
 import Fontisto from 'react-native-vector-icons/Fontisto';
 import Geolocation from '@react-native-community/geolocation';
 import BottomBar from './BottomBar';
@@ -128,6 +128,18 @@ const EmergencyScreen = () => {
               coordinate={[userLocation.longitude, userLocation.latitude]}
               title="User Location"
               snippet="Current Location"
+            />
+          )}
+          {routeGeometry && (
+            <LineLayer
+              id="route"
+              style={{
+                lineColor: '#0066FF',
+                lineWidth: 3,
+                lineCap: 'round',
+                lineJoin: 'round',
+              }}
+              sourceID="routeSource"
             />
           )}
           <Camera
