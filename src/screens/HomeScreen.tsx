@@ -65,7 +65,7 @@ const HomeScreen = () => {
       error => {
         console.error('Error fetching location: ', error);
       },
-      {enableHighAccuracy: true, timeout: 15000, maximumAge: 10000},
+      {enableHighAccuracy: false, timeout: 30000},
     );
   }, []);
 
