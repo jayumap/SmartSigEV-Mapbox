@@ -26,7 +26,6 @@ const HomeScreen = () => {
   const [modalVisible, setModalVisible] = useState<boolean>(false);
   const [LocationData, setLocationData] = useState<any>(null);
   const [userLocation, setUserLocation] = useState<any>(null);
-  const [searchText, setSearchText] = useState<string>('');
 
   //   reverse geocode endpoint
   useEffect(() => {
@@ -77,16 +76,6 @@ const HomeScreen = () => {
     setModalVisible(false);
   };
 
-  //   search destination
-  const handleSearch = () => {
-    // Handle search logic here
-    console.log('Searching for:', searchText);
-  };
-
-  const handleEmergency = () => {
-    // Handle emergency button press
-    console.log('Emergency button pressed');
-  };
 
   return (
     <View style={styles.container}>
@@ -162,7 +151,7 @@ const HomeScreen = () => {
       </Modal>
 
       {/* Bottom bar */}
-      <BottomBar onSearch={handleSearch} onEmergency={handleEmergency} />
+      <BottomBar onSearch={() => {}} onEmergency={() => {}}/>
     </View>
   );
 };
@@ -244,36 +233,6 @@ const styles = StyleSheet.create({
     color: 'white',
     fontSize: 16,
     padding: 10,
-    fontFamily: 'Poppins-Regular',
-  },
-  bottomBar: {
-    position: 'absolute',
-    bottom: 50,
-    left: 10,
-    right: 10,
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-  },
-  searchInput: {
-    flex: 1,
-    backgroundColor: 'grey',
-    color: 'black',
-    borderRadius: 8,
-    paddingVertical: 10,
-    paddingHorizontal: 15,
-    marginRight: 10,
-    fontFamily: 'Poppins-Regular',
-  },
-  emergencyButton: {
-    backgroundColor: 'red',
-    borderRadius: 8,
-    paddingVertical: 10,
-    paddingHorizontal: 20,
-  },
-  emergencyButtonText: {
-    color: 'white',
-    fontSize: 16,
     fontFamily: 'Poppins-Regular',
   },
 });

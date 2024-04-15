@@ -20,6 +20,7 @@ interface BottomBarProps {
     const navigation = useNavigation();
   
     const handleSearch = () => {
+      console.log('Searching for:',searchText)
       onSearch(searchText);
     };
 
@@ -81,7 +82,7 @@ const styles = StyleSheet.create({
         flex: 1,
         paddingVertical: 10,
         fontSize: 16,
-        color: 'red',
+        color: 'black',
         fontFamily: 'Poppins-Regular',
       },
       emergencyButton: {
