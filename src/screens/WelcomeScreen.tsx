@@ -7,7 +7,7 @@ const WelcomeScreen = () => {
     const navigation = useNavigation();
   
     const handleContinue = () => {
-      navigation.navigate('Home'); // Navigate to HomeScreen
+      navigation.navigate('PhoneNumber'); // Navigate to HomeScreen
     };
 
   return (
