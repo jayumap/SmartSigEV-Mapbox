@@ -1,8 +1,9 @@
 import React from 'react'
+import { Text } from 'react-native'
 
 const VerifyCodeScreen = () => {
   return (
-    <div>VerifyCodeScreen</div>
+    <Text>Verify</Text>
   )
 }
 
