@@ -6,13 +6,12 @@ import {
   Button,
   Text,
   Dimensions,
-  TouchableOpacity
+  TouchableOpacity,
 } from 'react-native';
 import Mapbox from '@rnmapbox/maps';
 import {Camera, UserLocation, PointAnnotation, LineLayer} from '@rnmapbox/maps';
-import Fontisto from 'react-native-vector-icons/Fontisto';
 import Geolocation from '@react-native-community/geolocation';
-import BottomBar from './BottomBar';
+
 
 Mapbox.setAccessToken(
   'pk.eyJ1IjoidG9tcGF3YXIiLCJhIjoiY2x1dXV1cW1yMGNydTJqcGowMHh3eGplZCJ9.mbpWLDDHex0ERfZ8e8ff4g',
@@ -27,6 +26,7 @@ const EmergencyScreen = () => {
   const [startLocation, setStartLocation] = useState<any>(null);
   const [destinationLocation, setDestinationLocation] = useState<any>(null);
   const [routeGeometry, setRouteGeometry] = useState<any>(null);
+  const [mapRef, setMapRef] = useState<Mapbox.MapView | null>(null);
 
   useEffect(() => {
     // Fetch user's location
@@ -106,6 +106,19 @@ const EmergencyScreen = () => {
     }
   };
 
+  const handleMapReady = () => {
+    if (mapRef && startLocation && destinationLocation) {
+      const coordinates = [
+        [startLocation.longitude, startLocation.latitude],
+        [destinationLocation.longitude, destinationLocation.latitude],
+      ];
+
+      mapRef.fitBounds(coordinates, {
+        edgePadding: {top: 50, right: 50, bottom: 50, left: 50},
+      });
+    }
+  };
+
   return (
     <View style={styles.container}>
       <View style={styles.inputContainerWrapper}>
@@ -135,10 +148,12 @@ const EmergencyScreen = () => {
       </View>
       <View style={styles.mapContainer}>
         <Mapbox.MapView
+          ref={ref => setMapRef(ref)}
           style={styles.map}
           zoomEnabled={true}
           styleURL="mapbox://styles/mapbox/streets-v12"
-          rotateEnabled={true}>
+          rotateEnabled={true}
+          onDidFinishLoadingMap={handleMapReady}>
           {/* {userLocation && (
             <PointAnnotation
               id="userLocation"
@@ -158,7 +173,10 @@ const EmergencyScreen = () => {
           {destinationLocation && (
             <PointAnnotation
               id="destinationLocation"
-              coordinate={[destinationLocation.longitude, destinationLocation.latitude]}
+              coordinate={[
+                destinationLocation.longitude,
+                destinationLocation.latitude,
+              ]}
               title="Destination Location"
               snippet="Destination"
             />
@@ -176,7 +194,7 @@ const EmergencyScreen = () => {
             />
           )}
           <Camera
-            zoomLevel={15}
+            zoomLevel={8}
             centerCoordinate={[
               userLocation?.longitude ?? 0,
               userLocation?.latitude ?? 0,
@@ -231,17 +249,17 @@ const styles = StyleSheet.create({
     fontSize: 13,
   },
   button: {
-    backgroundColor: 'black', 
+    backgroundColor: 'black',
     paddingVertical: 10,
     paddingHorizontal: 20,
     borderRadius: 5,
-    marginTop: 10, 
+    marginTop: 10,
   },
   buttonText: {
-    color: 'white', 
-    fontSize: 14, 
+    color: 'white',
+    fontSize: 14,
     textAlign: 'center',
-    fontFamily: 'Poppins-Regular', 
+    fontFamily: 'Poppins-Regular',
   },
 });
 
