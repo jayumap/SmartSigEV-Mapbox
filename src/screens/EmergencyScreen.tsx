@@ -139,12 +139,28 @@ const EmergencyScreen = () => {
           zoomEnabled={true}
           styleURL="mapbox://styles/mapbox/streets-v12"
           rotateEnabled={true}>
-          {userLocation && (
+          {/* {userLocation && (
             <PointAnnotation
               id="userLocation"
               coordinate={[userLocation.longitude, userLocation.latitude]}
               title="User Location"
               snippet="Current Location"
+            />
+          )} */}
+          {startLocation && (
+            <PointAnnotation
+              id="startLocation"
+              coordinate={[startLocation.longitude, startLocation.latitude]}
+              title="Source Location"
+              snippet="Start Location"
+            />
+          )}
+          {destinationLocation && (
+            <PointAnnotation
+              id="destinationLocation"
+              coordinate={[destinationLocation.longitude, destinationLocation.latitude]}
+              title="Destination Location"
+              snippet="Destination"
             />
           )}
           {routeGeometry && (
