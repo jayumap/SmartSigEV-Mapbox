@@ -12,7 +12,6 @@ import Mapbox from '@rnmapbox/maps';
 import {Camera, UserLocation, PointAnnotation, LineLayer} from '@rnmapbox/maps';
 import Geolocation from '@react-native-community/geolocation';
 
-
 Mapbox.setAccessToken(
   'pk.eyJ1IjoidG9tcGF3YXIiLCJhIjoiY2x1dXV1cW1yMGNydTJqcGowMHh3eGplZCJ9.mbpWLDDHex0ERfZ8e8ff4g',
 );
@@ -194,11 +193,20 @@ const EmergencyScreen = () => {
             />
           )}
           <Camera
-            zoomLevel={8}
-            centerCoordinate={[
-              userLocation?.longitude ?? 0,
-              userLocation?.latitude ?? 0,
-            ]}
+            zoomLevel={
+              startLocation && destinationLocation ? 8 : userLocation ? 15 : 0
+            }
+            centerCoordinate={
+              startLocation && destinationLocation
+                ? [
+                    (startLocation.longitude + destinationLocation.longitude) /
+                      2,
+                    (startLocation.latitude + destinationLocation.latitude) / 2,
+                  ]
+                : userLocation
+                ? [userLocation.longitude, userLocation.latitude]
+                : [0, 0]
+            }
             pitch={0}
             animationMode="flyTo"
             animationDuration={3000}
