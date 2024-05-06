@@ -14,8 +14,7 @@ import Geolocation from '@react-native-community/geolocation';
 
 Mapbox.setAccessToken(
   'pk.eyJ1IjoidG9tcGF3YXIiLCJhIjoiY2x1dXV1cW1yMGNydTJqcGowMHh3eGplZCJ9.mbpWLDDHex0ERfZ8e8ff4g',
-);
-
+);  
 Mapbox.setTelemetryEnabled(false);
 
 const EmergencyScreen = () => {
@@ -62,6 +61,19 @@ const EmergencyScreen = () => {
       const data = await response.json();
       console.log('Directions:', data);
       // Handle the directions data here, e.g., display on the map or extract route information
+      if (data.routes && data.routes.length > 0) {
+        const route = data.routes[0]; // Let's take the first route for simplicity
+        const routeGeometry = route.geometry;
+  
+        setRouteGeometry(routeGeometry);
+  
+        // Adjust camera to fit the route bounds
+        // mapRef.current.fitBounds(route.bounds, {
+        //   edgePadding: {top: 100, right: 100, bottom: 100, left: 100},
+        // });
+      } else {
+        console.error('No routes found in the response');
+      }
     } catch (error) {
       console.error('Error fetching directions:', error.message);
     }
@@ -152,6 +164,7 @@ const EmergencyScreen = () => {
           zoomEnabled={true}
           styleURL="mapbox://styles/mapbox/streets-v12"
           rotateEnabled={true}
+          logoEnabled={false}
           onDidFinishLoadingMap={handleMapReady}>
           {/* {userLocation && (
             <PointAnnotation

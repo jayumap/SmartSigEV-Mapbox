@@ -9,6 +9,14 @@ const VerifyCodeScreen = () => {
   const navigation = useNavigation();
 
   const handleVerify = () => {
+    // Check if any OTP field is empty
+    const isOtpEmpty = otp.some(value => value === '');
+    if (isOtpEmpty) {
+      // Display error message and make border red for empty fields
+      alert('Invalid OTP. Please enter all digits.');
+      return;
+    }
+
     // Logic to handle verification
     navigation.navigate('Home');
   };
@@ -60,7 +68,10 @@ const VerifyCodeScreen = () => {
             <TextInput
               key={index}
               ref={(input) => otpInputs.current[index] = input as TextInput}
-              style={styles.otpInput}
+              style={[
+                styles.otpInput,
+                value === '' && styles.invalidOtpInput // Apply red border for empty fields
+              ]}
               placeholder=""
               keyboardType="numeric"
               maxLength={1}
@@ -122,10 +133,13 @@ const styles = StyleSheet.create({
     width: 30,
     fontSize: 16,
     paddingHorizontal: 10,
-    borderColor: 'gray',
+    borderColor: 'green',
     borderWidth: 1,
     borderRadius: 5,
     fontFamily: 'Poppins-Light',
+  },
+  invalidOtpInput: {
+    borderColor: 'red', // Red border for invalid input
   },
   verifyButton: {
     backgroundColor: 'black',
