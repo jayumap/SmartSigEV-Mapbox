@@ -19,6 +19,10 @@ const VerifyCodeScreen = () => {
 
     // Logic to handle verification
     navigation.navigate('Home');
+    navigation.reset({
+      index: 0,
+      routes: [{ name: 'Home' }],
+    });
   };
 
   const handleBack = () => {
