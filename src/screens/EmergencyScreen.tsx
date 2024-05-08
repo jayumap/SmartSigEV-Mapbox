@@ -9,7 +9,13 @@ import {
   TouchableOpacity,
 } from 'react-native';
 import Mapbox from '@rnmapbox/maps';
-import {Camera, UserLocation, PointAnnotation, LineLayer} from '@rnmapbox/maps';
+import {
+  Camera,
+  UserLocation,
+  PointAnnotation,
+  LineLayer,
+  ShapeSource,
+} from '@rnmapbox/maps';
 import Geolocation from '@react-native-community/geolocation';
 
 Mapbox.setAccessToken(
@@ -66,16 +72,16 @@ const EmergencyScreen = () => {
       const waypoints = data.waypoints.map(waypoint => waypoint.location);
       const allCoordinates = [...routeCoordinates, ...waypoints];
 
-      console.log('All coordinates from start to end:');
-      allCoordinates.forEach(coordinate => {
-        console.log(`Latitude: ${coordinate[1]}, Longitude: ${coordinate[0]}`);
-      });
+      // console.log('All coordinates from start to end:');
+      // allCoordinates.forEach(coordinate => {
+      //   console.log(`Latitude: ${coordinate[1]}, Longitude: ${coordinate[0]}`);
+      // });
 
       setCoordinates(allCoordinates);
       // Handle the directions data here, e.g., display on the map or extract route information
       if (data.routes && data.routes.length > 0) {
         const route = data.routes[0]; // Let's take the first route for simplicity
-        const routeGeometry = route.geometry;
+        const routeGeometry = data.routes[0].geometry;
 
         setRouteGeometry(routeGeometry);
 
@@ -89,25 +95,6 @@ const EmergencyScreen = () => {
     } catch (error) {
       console.error('Error fetching directions:', error.message);
     }
-  };
-
-  const renderRoutePoints = () => {
-    return coordinates.map((coordinate, index) => (
-      <PointAnnotation
-        key={`routePoint-${index}`}
-        id={`routePoint-${index}`}
-        coordinate={[coordinate[0], coordinate[1]]}
-        title={`Route Point ${index}`}
-        snippet={`Coordinate: ${coordinate[1]}, ${coordinate[0]}`}
-        // Customize marker properties as needed
-        strokeColor="#3388FF"
-        strokeWidth={2}
-        fillColor="#3388FF"
-        fillOpacity={0.5}
-        // Adjust the size of the marker as needed
-        size={20}
-      />
-    ));
   };
 
   const handleEndEditing = async (address: string, setLocation: Function) => {
@@ -224,34 +211,21 @@ const EmergencyScreen = () => {
               snippet="Destination"
             />
           )}
-          {routeGeometry && (
-            <LineLayer
-              id="route"
-              style={{
-                lineColor: '#0066FF',
-                lineWidth: 3,
-                lineCap: 'round',
-                lineJoin: 'round',
-              }}
-              sourceID="routeSource"
-            />
-          )}
 
-          {/* Render blue points */}
-          {renderRoutePoints()}
+          <ShapeSource id="routeSource" />
 
-          {/* Render route line */}
           {routeGeometry && (
-            <LineLayer
-              id="route"
-              style={{
-                lineColor: '#0066FF',
-                lineWidth: 3,
-                lineCap: 'round',
-                lineJoin: 'round',
-              }}
-              sourceID="routeSource"
-            />
+            <Mapbox.ShapeSource id="routeSource" shape={routeGeometry}>
+              <Mapbox.LineLayer
+                id="route"
+                style={{
+                  lineColor: '#0066FF',
+                  lineWidth: 5,
+                  lineCap: 'round',
+                  lineJoin: 'round',
+                }}
+              />
+            </Mapbox.ShapeSource>
           )}
 
           <Camera
