@@ -1,14 +1,20 @@
 // WelcomeScreen.tsx
 import React from 'react';
-import { View, Image, TouchableOpacity, StyleSheet, Text } from 'react-native';
-import { useNavigation } from '@react-navigation/native';
+import {View, Image, TouchableOpacity, StyleSheet, Text} from 'react-native';
+import {useNavigation} from '@react-navigation/native';
 
 const WelcomeScreen = () => {
-    const navigation = useNavigation();
-  
-    const handleContinue = () => {
-      navigation.navigate('PhoneNumber'); // Navigate to HomeScreen
-    };
+  const navigation = useNavigation();
+
+  const handleContinue = () => {
+    console.log('Logging as Ambulance Driver');
+    navigation.navigate('PhoneNumber'); // Navigate to HomeScreen
+  };
+
+  const handleAdminLogin = () => {
+    console.log('Logging as Traffic Signal');
+    navigation.navigate('AdminLogin'); // Navigate to AdminLoginScreen
+  };
 
   return (
     <View style={styles.container}>
@@ -30,11 +36,20 @@ const WelcomeScreen = () => {
 
       {/* Continue with phone number button */}
       <TouchableOpacity style={styles.continueButton} onPress={handleContinue}>
-        <Text style={styles.buttonText}>Continue with Phone Number</Text>
+        <Text style={styles.buttonText}>
+          Ambulance Drivers Login
+        </Text>
+      </TouchableOpacity>
+
+      {/* Admin login button */}
+      <TouchableOpacity style={styles.adminButton} onPress={handleAdminLogin}>
+        <Text style={styles.adminButtonText}>Traffic Signal Login</Text>
       </TouchableOpacity>
 
       {/* Terms and conditions text */}
-      <Text style={styles.termsText}>By continuing, you agree to our Terms and Conditions</Text>
+      <Text style={styles.termsText}>
+        By continuing, you agree to our Terms and Conditions
+      </Text>
     </View>
   );
 };
@@ -61,7 +76,7 @@ const styles = StyleSheet.create({
   },
   tagline: {
     position: 'absolute',
-    top: '75%',
+    top: '68%',
     textAlign: 'left',
     left: 10,
     fontSize: 25,
@@ -71,26 +86,43 @@ const styles = StyleSheet.create({
   },
   continueButton: {
     position: 'absolute',
-    bottom: 65,
+    bottom: 128,
     width: '92%',
     backgroundColor: 'black',
     padding: 15,
     borderRadius: 10,
     marginBottom: 8,
   },
+  adminButton: {
+    position: 'absolute',
+    bottom: 65,
+    width: '92%',
+    backgroundColor: 'transparent', // Change color as needed
+    padding: 15,
+    borderRadius: 10,
+    marginBottom: 8,
+    borderWidth: 1,
+    borderColor: 'black',
+  },
   buttonText: {
     color: 'white',
-    fontSize: 16,
+    fontSize: 14,
     textAlign: 'center',
-    fontFamily: 'Poppins-Regular'
+    fontFamily: 'Poppins-Regular',
+  },
+  adminButtonText: {
+    color: 'black',
+    fontSize: 14,
+    textAlign: 'center',
+    fontFamily: 'Poppins-Regular',
   },
   termsText: {
     position: 'absolute',
     bottom: 30,
     fontSize: 12,
     color: 'gray',
-    fontFamily: 'Poppins-Light'
-  }
+    fontFamily: 'Poppins-Light',
+  },
 });
 
 export default WelcomeScreen;

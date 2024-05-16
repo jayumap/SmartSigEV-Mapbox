@@ -15,6 +15,7 @@ import Mapbox from '@rnmapbox/maps';
 import Fontisto from 'react-native-vector-icons/Fontisto';
 import Geolocation from '@react-native-community/geolocation';
 import BottomBar from './BottomBar';
+import { useNavigation } from '@react-navigation/native';
 
 Mapbox.setAccessToken(
   'pk.eyJ1IjoidG9tcGF3YXIiLCJhIjoiY2x1dXV1cW1yMGNydTJqcGowMHh3eGplZCJ9.mbpWLDDHex0ERfZ8e8ff4g',
@@ -26,6 +27,7 @@ const HomeScreen = () => {
   const [modalVisible, setModalVisible] = useState<boolean>(false);
   const [LocationData, setLocationData] = useState<any>(null);
   const [userLocation, setUserLocation] = useState<any>(null);
+  const navigation = useNavigation();
 
   //   reverse geocode endpoint
   useEffect(() => {
@@ -76,6 +78,10 @@ const HomeScreen = () => {
     setModalVisible(false);
   };
 
+  const handleLogout = () => {
+    navigation.navigate('Welcome');
+  };
+
 
   return (
     <View style={styles.container}>
@@ -89,8 +95,8 @@ const HomeScreen = () => {
               ? `${LocationData?.display_name}`
               : 'Loading location...'}
           </Text>
-          <TouchableOpacity onPress={() => {}}>
-            <Fontisto name="bell" size={15} color={'#000000'} />
+          <TouchableOpacity onPress={handleLogout}>
+            <Fontisto name="power" size={15} color={'#000000'}/>
           </TouchableOpacity>
         </View>
       </View>

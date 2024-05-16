@@ -17,6 +17,8 @@ import {
   ShapeSource,
 } from '@rnmapbox/maps';
 import Geolocation from '@react-native-community/geolocation';
+import NavigationScreen from './NavigationScreen';
+import {useNavigation} from '@react-navigation/native';
 
 Mapbox.setAccessToken(
   'pk.eyJ1IjoidG9tcGF3YXIiLCJhIjoiY2x1dXV1cW1yMGNydTJqcGowMHh3eGplZCJ9.mbpWLDDHex0ERfZ8e8ff4g',
@@ -32,6 +34,13 @@ const EmergencyScreen = () => {
   const [routeGeometry, setRouteGeometry] = useState<any>(null);
   const [mapRef, setMapRef] = useState<Mapbox.MapView | null>(null);
   const [coordinates, setCoordinates] = useState<any[]>([]);
+  const [showStartNavigationButton, setShowStartNavigationButton] =
+    useState(false);
+  const [showNavigation, setShowNavigation] = useState(false);
+  const navigation = useNavigation();
+  const [distance, setDistance] = useState<number | null>(null);
+  const [duration, setDuration] = useState<number | null>(null);
+  const [showRouteInfo, setShowRouteInfo] = useState(false);
 
   useEffect(() => {
     // Fetch user's location
@@ -80,17 +89,25 @@ const EmergencyScreen = () => {
       setCoordinates(allCoordinates);
       // Handle the directions data here, e.g., display on the map or extract route information
       if (data.routes && data.routes.length > 0) {
-        const route = data.routes[0]; // Let's take the first route for simplicity
-        const routeGeometry = data.routes[0].geometry;
+        const route = data.routes[0];
+        // const routeGeometry = data.routes[0].geometry;
 
-        setRouteGeometry(routeGeometry);
+        setRouteGeometry(data.routes[0].geometry);
+
+        const {distance, duration} = route;
+        setDistance(distance);
+        setDuration(duration);
+        setShowRouteInfo(true);
 
         // Adjust camera to fit the route bounds
         // mapRef.current.fitBounds(route.bounds, {
         //   edgePadding: {top: 100, right: 100, bottom: 100, left: 100},
         // });
       } else {
+        setRouteGeometry(null);
         console.error('No routes found in the response');
+        setDistance(null);
+        setDuration(null);
       }
     } catch (error) {
       console.error('Error fetching directions:', error.message);
@@ -146,6 +163,23 @@ const EmergencyScreen = () => {
         edgePadding: {top: 50, right: 50, bottom: 50, left: 50},
       });
     }
+  };
+
+  useEffect(() => {
+    // Update visibility of Start Navigation button based on routeGeometry
+    setShowStartNavigationButton(routeGeometry !== null);
+  }, [routeGeometry]);
+
+  // Function to handle navigation start
+  const startNavigation = () => {
+    // Implement navigation start logic here
+    console.log('Navigation started!');
+    navigation.navigate('Navigation', {
+      userLocation,
+      startLocation,
+      destinationLocation,
+      routeGeometry,
+    });
   };
 
   return (
@@ -212,8 +246,6 @@ const EmergencyScreen = () => {
             />
           )}
 
-          <ShapeSource id="routeSource" />
-
           {routeGeometry && (
             <Mapbox.ShapeSource id="routeSource" shape={routeGeometry}>
               <Mapbox.LineLayer
@@ -249,6 +281,36 @@ const EmergencyScreen = () => {
           />
         </Mapbox.MapView>
       </View>
+      {/* Route info container */}
+      {showRouteInfo && (
+        <View style={styles.routeInfo}>
+          {distance !== null && duration !== null && (
+            <Text style={styles.navigationInfoText}>
+              Distance: {Math.round(distance / 1000)} km, Duration:{' '}
+              {Math.round(duration / 60)} mins
+            </Text>
+          )}
+        </View>
+      )}
+      <View style={styles.inputContainerWrapperStart}>
+        {/* Start Navigation Button */}
+        {showStartNavigationButton && (
+          <TouchableOpacity
+            style={styles.buttonStart}
+            onPress={startNavigation}>
+            <Text style={styles.buttonText}>Start Navigation</Text>
+          </TouchableOpacity>
+        )}
+      </View>
+      {/* Conditionally render the NavigationScreen component */}
+      {showNavigation && (
+        <NavigationScreen
+          userLocation={userLocation}
+          startLocation={startLocation}
+          destinationLocation={destinationLocation}
+          routeGeometry={routeGeometry}
+        />
+      )}
     </View>
   );
 };
@@ -280,6 +342,14 @@ const styles = StyleSheet.create({
     backgroundColor: 'white',
     borderRadius: 10,
   },
+  inputContainerWrapperStart: {
+    position: 'absolute',
+    top: 20,
+    left: 10,
+    right: 10,
+    zIndex: 0,
+    backgroundColor: 'transparent',
+  },
   inputContainer: {
     padding: 18,
   },
@@ -299,12 +369,43 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     marginTop: 10,
   },
+  buttonStart: {
+    backgroundColor: 'black',
+    paddingVertical: 10,
+    paddingHorizontal: 20,
+    borderRadius: 5,
+    margin: 20,
+    top: 750,
+  },
   buttonText: {
     color: 'white',
     fontSize: 14,
     textAlign: 'center',
     fontFamily: 'Poppins-Regular',
   },
+  routeInfo:{
+    position: 'absolute',
+    top: 220, // Adjust the top position as needed to position it above the button
+    zIndex: 2, // Ensure it's above other components
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'white',
+    opacity: 0.8,
+    paddingVertical: 15,
+    paddingHorizontal: 25,
+    borderRadius: 25,
+    margin: 15,
+    borderColor: 'black',
+    borderWidth: 0,
+    left: 60,
+    width: '60%',
+  },
+  navigationInfoText:{
+    color: 'black',
+    fontSize: 12.6,
+    textAlign: 'center',
+    fontFamily: 'Poppins-Regular',
+  }
 });
 
 export default EmergencyScreen;
